@@ -88,7 +88,7 @@ void cache_access(char rw, uint64_t address, cache_stats_t* p_stats)
 	
 	if(hit)
 	{
-		if( R == LRU)
+		if( r == LRU)
 		{
 			//handle cache hit lru
 		}
@@ -99,7 +99,7 @@ void cache_access(char rw, uint64_t address, cache_stats_t* p_stats)
 	}
 	else
 	{
-		if( R == LRU)
+		if( r == LRU)
 		{
 			//handle cache miss lru
 		}
