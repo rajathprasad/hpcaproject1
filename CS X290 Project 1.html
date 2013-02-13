@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0150)https://files.t-square.gatech.edu/access/content/attachment/XLS0105171637201302.201302/Assignments/8b4cc2c3-9489-41f1-9d51-89edcaa9693c/proj1-s13.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<title>CS X290 Project 1</title>
+	<meta name="GENERATOR" content="LibreOffice 3.6  (Linux)">
+	<meta name="AUTHOR" content="Tom Conte">
+	<meta name="CREATED" content="0;0">
+	<meta name="CHANGED" content="20130201;13561900">
+	<meta name="Template" content="C:\Program Files\Microsoft Office\Office\html.dot">
+	<style type="text/css">
+	<!--
+		P { margin-bottom: 0in }
+	-->
+	</style>
+</head>
+<body lang="en-US" dir="LTR">
+<p align="CENTER" style="margin-bottom: 0.2in"><font size="4"><b>Georgia
+Institute of Techology</b></font></p>
+<p align="CENTER" style="margin-bottom: 0.2in"><font size="4"><b>School
+of Computer Science</b></font></p>
+<p align="CENTER" style="margin-bottom: 0.2in"><font size="4"><b>CS
+4290/6290, ECE 4100/6100: Spring, 2013 (Conte)</b></font></p>
+<p align="CENTER" style="margin-bottom: 0.2in"><font size="4"><b>Project
+1: Cache design</b></font></p>
+<p align="CENTER" style="margin-bottom: 0.2in"><br><font size="4"><b>Due:
+Saturday, Feb. 23, 2013</b></font> 
+</p>
+<p align="CENTER" style="margin-bottom: 0.2in"><br><br>
+</p>
+<p style="margin-bottom: 0.2in"><br><br>
+</p>
+<h2><u>Rules</u></h2>
+<p style="margin-bottom: 0.2in">This is the first project for the
+course --- here are some rules: 
+</p>
+<ol>
+	<ol>
+		<li><p style="margin-bottom: 0.2in"><u>Sharing of code between
+		students is viewed as cheating</u> and will receive appropriate
+		action in accordance with University policy. 
+		</p>
+		</li><li><p style="margin-bottom: 0.2in">It is acceptable for you to
+		compare your <u>results</u>, and only your results, with other
+		students to help debug your program. It is <u>not acceptable</u> to
+		collaborate either on the code development or on the final
+		experiments. 
+		</p>
+		</li><li><p style="margin-bottom: 0.2in">You should do all your work in
+		the C or C++ programming language, and should be written according
+		to the C99 or C++98 standards, using only the standard libraries.</p>
+		</li><li><p style="margin-bottom: 0.2in">Unfortunately experience has
+		shown that there is a very high chance that there are errors in
+		this project description.&nbsp; The online version will be updated
+		as errors are discovered.&nbsp; <i><u>It is your responsibility to
+		check the website often and download new versions of this project
+		description as they become available</u></i>. 
+		</p>
+		</li><li><p style="margin-bottom: 0.2in">A Makefile with the frontend
+		will be given to you; you will only need to fill in the empty
+		functions and any additional subroutines you will be using. You
+		will also need to fill in the statistics structure that will be
+		used to output the results.</p>
+	</li></ol>
+</ol>
+<h2><u><b>Project Description:</b></u></h2>
+<p style="margin-bottom: 0.2in">Cache memories are hard to
+understand!&nbsp; One way to understand them is to actually build a
+cache.&nbsp; We do not have time to do this in this class.&nbsp;
+However, writing a simulator for a cache can also make caches easier
+to understand.&nbsp; So in this project, you will design a parametric
+cache simulator and use it to design data caches well suited to the
+SPEC benchmarks. <br>&nbsp; 
+</p>
+<h2><u><b>Specification of simulator:</b></u></h2>
+<h3><i>Cache simulation capabilities:</i></h3>
+<ol type="a">
+	<li><p style="margin-bottom: 0.2in">The simulator can model any
+	caching system with 2<sup><i>C</i></sup> bytes of total data
+	storage, having 2<sup><i>B</i></sup>-byte blocks, and with sets of
+	2<sup><i>S</i></sup> blocks per set (note that S=0 is a
+	direct-mapped cache, and <i>S = C - B</i> is a fully associative
+	cache)</p>
+	</li><li><p style="margin-bottom: 0.2in">The memory addresses are 64-bit
+	addresses</p>
+	</li><li><p style="margin-bottom: 0.2in">The cache is byte-addressable</p>
+	</li><li><p style="margin-bottom: 0.2in">The cache implements the
+	write-back, write-allocate (WBWA) policy. There is an additional
+	dirty bit for each block required</p>
+	</li><li><p style="margin-bottom: 0.2in">The cache controller implements
+	one of two fetch policies (<i>F</i>): BLOCKING, or
+	early-restart-with-critical-word-first (EARLY)</p>
+	<ul>
+		<li><p style="margin-bottom: 0.2in">The BLOCKING cache will wait
+		until the entire cache block is filled before returning to the
+		processor the data</p>
+	</li></ul>
+</li></ol>
+<ol type="a">
+	<ul>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">The hit time will be 0.2*<i>2</i><sup><i>S</i></sup>
+			cycles</p>
+		</li></ul>
+	</ul>
+</ol>
+<ol type="a">
+	<ul>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">The miss penalty will consume
+			0.2*<i>2</i><sup><i>S</i></sup><i>+</i>50+0.25*2<sup><i>B</i></sup>
+			cycles</p>
+			</li><li><p style="margin-bottom: 0.2in">There is 1 valid bit per block
+			of storage overhead required</p>
+		</li></ul>
+	</ul>
+</ol>
+<ol type="a">
+	<ul>
+		<li><p style="margin-bottom: 0.2in">The EARLY cache will first
+		retrieve the specified word and return the contents to the
+		processor. The bytes through the end of the cache block will be
+		also be brought in</p>
+	</li></ul>
+</ol>
+<ol type="a">
+	<ul>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">The hit time will be 0.2*<i>2</i><sup><i>S</i></sup>
+			cycles</p>
+		</li></ul>
+	</ul>
+</ol>
+<ol type="a">
+	<ul>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">The miss penalty will consume
+			0.2*<i>2</i><sup><i>S</i></sup><i>+</i>51 cycles for the access</p>
+		</li></ul>
+	</ul>
+</ol>
+<ol type="a">
+	<ul>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">If the first access was to the
+			middle of the cache block, any bytes before that initial offset is
+			not in the cache and will cause an additional miss, while bytes
+			after the offset through the end of the block will have been
+			brought in by the initial access and will be a hit. 
+			</p>
+		</li></ul>
+	</ul>
+</ol>
+<ol type="a">
+	<ul>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">There is 2<sup><i>B</i></sup>
+			valid bits per block of storage overhead required, one for each
+			offset</p>
+		</li></ul>
+	</ul>
+</ol>
+<ol type="a" start="6">
+	<li><p style="margin-bottom: 0.2in">The cache controller implements
+	one of two replacement policies (<i>R</i>): least-recently-used
+	(LRU), or not-most-recently-used-FIFO (NMRU_FIFO)</p>
+	<ul>
+		<li><p style="margin-bottom: 0.2in">The LRU cache chooses the least
+		recently used block for replacement</p>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">There are 8 bits per block of
+			storage overhead</p>
+		</li></ul>
+		</li><li><p style="margin-bottom: 0.2in">The NMRU_FIFO cache will choose
+		the oldest block, excluding the most recently used one</p>
+		<ul>
+			<li><p style="margin-bottom: 0.2in">There are 4 bites per block of
+			storage overhead</p>
+		</li></ul>
+	</li></ul>
+	</li><li><p style="margin-bottom: 0.2in">Remember, all hit times and miss
+	penalties need to be in integer, and should be round up to the
+	nearest one</p>
+	</li><li><p style="margin-bottom: 0.2in">In general, (<i>C, B, S, F, R</i>)
+	completely specifies the caching system</p>
+</li></ol>
+<h3>Explanation of Functions you need to fill in:</h3>
+<p style="margin-bottom: 0.2in"><font face="Monospace">void
+setup_cache(uint64_t c, uint64_t s, uint64_t b, char f, char r);</font></p>
+<p style="margin-bottom: 0.2in">Subroutine for initializing the
+cache. You many add and initialize any global or heap variables as
+needed. f can be either BLOCKING or EAGER, r can be either LRU or
+NMRU_FIFO (these are defined in cachesim.hpp).</p>
+<p style="margin-bottom: 0.2in"><br><br>
+</p>
+<p style="margin-bottom: 0.2in"><font face="Monospace">void
+cache_access(char type, uint64_t arg, cache_stats_t* p_stats);</font></p>
+<p style="margin-bottom: 0.2in">Subroutine that simulates the cache
+one trace event at a time. Type can be either READ or WRITE, which is
+each defined cachesim.hpp. A READ event is a memory load operation of
+1 byte to the address specified in arg. A WRITE event is a memory
+store operation of 1 byte to the address specified in arg.</p>
+<p style="margin-bottom: 0.2in"><br><br>
+</p>
+<p style="margin-bottom: 0.2in"><font face="Monospace">void
+complete_cache(cache_stats_t *p_stats);</font></p>
+<p style="margin-bottom: 0.2in">Subroutine for cleaning up memory and
+calculating overall system statistics such as miss rate or average
+access time.</p>
+<p style="margin-bottom: 0.2in"><br><br>
+</p>
+<h3><i>Statistics (output)</i>: The simulator outputs the following
+statistics after completion of the run:</h3>
+<ol type="a">
+	<li><p style="margin-bottom: 0.2in">number of accesses to the cache 
+	</p>
+	</li><li><p style="margin-bottom: 0.2in">number of reads 
+	</p>
+	</li><li><p style="margin-bottom: 0.2in">number of read hits</p>
+	</li><li><p style="margin-bottom: 0.2in">number of read misses</p>
+	</li><li><p style="margin-bottom: 0.2in">number of writes</p>
+	</li><li><p style="margin-bottom: 0.2in">number of write hits</p>
+	</li><li><p style="margin-bottom: 0.2in">number of write misses 
+	</p>
+	</li><li><p style="margin-bottom: 0.2in">total number of misses (d+g)</p>
+	</li><li><p style="margin-bottom: 0.2in">cache miss rate, which equals
+	(total <em>number of misses</em>)/(<i>number of accesses</i>) 
+	</p>
+	</li><li><p style="margin-bottom: 0.2in">the average access time (AAT)</p>
+	</li><li><p style="margin-bottom: 0.2in">Total number of <u>bits</u>
+	needed for overhead storage, such as valid and dirty bits, LRU and
+	NMRU-FIFO</p>
+	</li><li><p style="margin-bottom: 0.2in">Total ratio of storage overhead
+	(total number of overhead storage <u>bytes</u>/total number of data
+	storage bytes)</p>
+</li></ol>
+<p style="margin-bottom: 0.2in"><br><br>
+</p>
+<p style="margin-bottom: 0.2in">The output of these variables should
+be handled by the driver code, and you only need to fill in the
+structure cache_statistics_t, defined in cachesim.hpp.</p>
+<h2><u><b>Experiments:</b></u></h2>
+<p style="margin-bottom: 0.2in">First validate your simulator (see
+the section on <i>validation requirement</i> below). 
+</p>
+<p style="margin-bottom: 0.2in">THE EXPERIMENTS ARE AS IMPORTANT AS
+HAVING A WORKING SIMULATOR! 
+</p>
+<p style="margin-bottom: 0.2in"><u>For each trace in the trace
+directory</u>, design a cache subject to the following goals: 
+</p>
+<ol>
+	<li><p style="margin-bottom: 0.2in">You have a total budget of 48KB
+	for the entire cache system's storage (including all tag storage,
+	valid bits, data storage and overhead storage)</p>
+	</li><li><p style="margin-bottom: 0.2in">The cache should have the lowest
+	possible AAT</p>
+</li></ol>
+<p style="margin-bottom: 0.2in">You may vary any parameter (<i>C, B,
+S, F, R</i>).</p>
+<h3><u><b>Validation Requirement</b></u></h3>
+<p style="margin-bottom: 0.2in">Four sample simulation outputs will
+be provided on the website by the TAs. You must run your simulator
+and debug it until it matches <u>100%</u> all the statistics in the
+validation outputs posted on the website. You are required to hand in
+this validated output with your project (see grading). 
+</p>
+<h3><b><u>What to hand in via T-Square</u>:</b></h3>
+<ol>
+	<li><p style="margin-bottom: 0.2in">Output from your simulation
+	showing it matches <u>100%</u> all the statistics in the validation
+	outputs posted on the website for each validation run</p>
+	</li><li><p style="margin-bottom: 0.2in">A document with the design
+	results of the experiments for each trace file, with a <i>persuasive</i>
+	argument of the choices that were made. (An argument may be as
+	simple as an explanation of the search procedure used to find the
+	designs and a statement about why the procedure is complete.) This
+	argument should include output from runs of your program. (<i>There
+	are multiple answers for each trace file, so I will know which
+	</i><i>students have</i><i> "collaborated"
+	inappropriately!</i>) 
+	</p>
+	</li><li><p style="margin-bottom: 0.2in">The commented source code for
+	the simulator program itself</p>
+	</li><li><p style="margin-bottom: 0.2in">Remember that your code must
+	compile and run on a current variant of Linux (i.e., Debian, Red
+	Hat, Ubuntu) running on an x86 architecture (i.e., Intel or AMD)</p>
+	</li><li><p style="margin-bottom: 0.2in"><b>Note that late projects will
+	not be accepted</b></p>
+</li></ol>
+<h3><u><b>Grading:</b></u></h3>
+<p style="margin-bottom: 0.2in"><br>0%&nbsp;&nbsp;&nbsp; You do not
+hand in anything by the deadline <br>+50%&nbsp;&nbsp;&nbsp; Your
+simulator doesn't run, does not work, but you hand in significant
+commented code <br>+20%&nbsp;&nbsp;&nbsp; Your simulator matches the
+validation outputs (5% each)<br>+20%&nbsp;&nbsp;&nbsp; You ran all
+experiments and found a cache for each trace<br>+10%&nbsp;&nbsp;&nbsp;
+The project hand in is award quality. For example, you justified each
+cache with graphs or tables and a persuasive argument</p>
+
+</body><div style="display: none; " id="V_VgWPKLySYvV_L4tH" class="gbB4KLDP9tJK9yll6EZu"></div><div style="display: none; " id="RfV3ISOLzej8vEyflIikH" class="gbB4KLDP9tJK9yll6EZu"></div><div style="display: none; " id="qHsYayX82INUy9uEIJq_S3WF8" class="gbB4KLDP9tJK9yll6EZu"></div></html>

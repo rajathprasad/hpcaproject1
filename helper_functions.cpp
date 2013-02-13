@@ -30,13 +30,13 @@ uint64_t get_index( uint64_t address,uint64_t C ,uint64_t S, uint64_t B)
 	//printf("shift is %ld\n", shift);
 	cache_index = address << shift;
 	//printf("index  is %x\n",cache_index);
-	cache_index = cache_index >> ADDRESS_SIZE - ( C - S ) + B;
+	cache_index = cache_index >> ( ADDRESS_SIZE - ( C - S ) + B );
 
 	//printf("index  is %x\n",cache_index);
 	return cache_index;
 }
 
-uint64_t get_tag( uint64_t address,uint64_t C,uint64_t B,uint64_t S )
+uint64_t get_tag( uint64_t address,uint64_t C,uint64_t S )
 {
 	uint64_t tag;
 	uint64_t shift = C - S;
