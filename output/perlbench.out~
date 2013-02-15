@@ -1,0 +1,22 @@
+Cache Settings
+C: 10
+B: 4
+S: 5
+F: BLOCKING
+R: LRU
+
+Cache Statistics
+Accesses: 507441
+Reads: 302052
+Read hits: 232571
+Read misses: 69481
+Writes: 205389
+Write hits: 167390
+Write misses: 37999
+Misses: 107480
+Hit Time: 7
+Miss Penalty: 61
+Miss rate: 0.211808
+Average access time (AAT): 19.920280
+Storage Overhead: 640
+Storage Overhead Ratio: 0.078125

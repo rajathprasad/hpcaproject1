@@ -78,11 +78,6 @@ int main(int argc, char* argv[]) {
     while (!feof(stdin)) { 
         int ret = fscanf(stdin, "%c %" PRIx64 "\n", &rw, &address); 
         if(ret == 2) {
-	//	printf("Read %" PRIx64, address);
-	//if (address == 0x606458)
-	//	z++;
-	//if(z == 290)
-	//	printf("Hello\n");
             cache_access(rw, address, &stats); 
         }
     }
