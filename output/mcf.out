@@ -8,15 +8,15 @@ R: NMRU_FIFO
 Cache Statistics
 Accesses: 507700
 Reads: 280182
-Read hits: 276325
-Read misses: 3857
+Read hits: 276457
+Read misses: 3725
 Writes: 227518
-Write hits: 210335
-Write misses: 17183
-Misses: 21040
+Write hits: 210582
+Write misses: 16936
+Misses: 20661
 Hit Time: 7
 Miss Penalty: 58
-Miss rate: 0.041442
-Average access time (AAT): 9.403624
+Miss rate: 0.040695
+Average access time (AAT): 9.360327
 Storage Overhead: 43008
 Storage Overhead Ratio: 0.164062

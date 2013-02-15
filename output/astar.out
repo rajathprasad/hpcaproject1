@@ -8,15 +8,15 @@ R: LRU
 Cache Statistics
 Accesses: 501468
 Reads: 289766
-Read hits: 276659
-Read misses: 13107
+Read hits: 275287
+Read misses: 14479
 Writes: 211702
-Write hits: 169438
-Write misses: 42264
-Misses: 55371
+Write hits: 172236
+Write misses: 39466
+Misses: 53945
 Hit Time: 2
-Miss Penalty: 60
-Miss rate: 0.110418
-Average access time (AAT): 8.625069
+Miss Penalty: 53
+Miss rate: 0.107574
+Average access time (AAT): 7.701431
 Storage Overhead: 41984
 Storage Overhead Ratio: 0.160156

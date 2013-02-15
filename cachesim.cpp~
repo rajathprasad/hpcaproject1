@@ -9,8 +9,10 @@ char F, R;
 uint64_t **tag_store;
 bool **valid, ***valid_eager;
 bool **dirty;
+int count = 0;
+bool print = false;
 
-uint64_t mru_tag; /* most recently used tag */
+uint64_t *mru_tag; /* most recently used tag */
 
 /**
  * Subroutine for initializing the cache. You many add and initialize any global or heap
@@ -35,7 +37,7 @@ void setup_cache(uint64_t c, uint64_t b, uint64_t s, char f, char r)
 	blocks_per_set = pow(2, S);
 	offsets_per_block = pow(2,B);
 	
-	printf("block per set %llu, %llu\n",blocks_per_set,S);
+	//printf("block per set %llu, %llu\n",blocks_per_set,S);
 	/*allocate space for cache stuff*/
 
 	
@@ -50,6 +52,9 @@ void setup_cache(uint64_t c, uint64_t b, uint64_t s, char f, char r)
 	{
 		dirty[i] = new bool[blocks_per_set];
 	}
+
+	mru_tag = new uint64_t[num_indices];
+	memset(mru_tag,0,num_indices*sizeof(uint64_t));
 
 	if(F == BLOCKING)
 	{
@@ -163,7 +168,7 @@ void NMRU_miss(uint64_t cache_index, uint64_t tag, uint64_t offset)
 {
 	if ( F == BLOCKING ) {
 	
-		if ( tag_store[cache_index][blocks_per_set-1] == mru_tag)
+		if ( tag_store[cache_index][blocks_per_set-1] == mru_tag[cache_index])
 		{
 			for(uint64_t j = blocks_per_set - 2; j > 0; j--)
 			{
@@ -189,8 +194,10 @@ void NMRU_miss(uint64_t cache_index, uint64_t tag, uint64_t offset)
 	}
 	if ( F == EAGER ) {
 	
-		if ( tag_store[cache_index][blocks_per_set-1] == mru_tag)
+		if ( tag_store[cache_index][blocks_per_set-1] == mru_tag[cache_index])
 		{
+			//if(cache_index == 5)
+			//	printf("
 			for(uint64_t j = blocks_per_set - 2; j > 0; j--)
 			{
 				tag_store[cache_index][j] = tag_store[cache_index][j-1];
@@ -267,17 +274,39 @@ void cache_access(char rw, uint64_t address, cache_stats_t* p_stats)
 	{
 		for(uint64_t j =0; j < blocks_per_set; j++)  /*check whether hit or miss*/
 		{
-			if((tag_store[cache_index][j] == tag) && valid_eager[cache_index][j][offset]== true)
+			if(tag_store[cache_index][j] == tag )// && valid_eager[cache_index][j][offset]== true)
 			{
-				hit = true;
-				hit_block = j;
-				break;
+				if ( valid_eager[cache_index][j][offset]== true)
+				{
+					hit = true;
+					hit_block = j;
+					break;
+				}
+				else  // tag present but invalid
+				{
+					count++;
+					hit = true;
+					hit_block = j;
+					for(uint64_t k = 0; k < offset; k++)
+						valid_eager[cache_index][j][k] = false;
+					for(uint64_t k = offset; k < offsets_per_block; k++)
+						valid_eager[cache_index][j][k] = true;
+					
+					rw == READ ? p_stats->read_hits--: p_stats->write_hits--;
+					rw == READ ? p_stats->read_misses++ : p_stats->write_misses++;
+					//printf(" MISS\n");
+					print = true;
+					break;
+				}
 			}
 		}
 	}
 	
 	if(hit)
 	{
+		//if(!print)
+		//	printf(" HIT\n");
+		print = false;
 		if( R == LRU)
 		{
 			//handle cache hit lru
@@ -286,12 +315,13 @@ void cache_access(char rw, uint64_t address, cache_stats_t* p_stats)
 		else
 		{
 			//handle cache hit nmru fifo
-			mru_tag = tag;
+			mru_tag[cache_index] = tag;
 		}
 		rw == READ ? p_stats->read_hits++: p_stats->write_hits++;
 	}
 	else  /*miss*/
 	{
+		//printf(" MISS\n");
 		if( R == LRU)
 		{
 			//handle cache miss lru
@@ -301,7 +331,7 @@ void cache_access(char rw, uint64_t address, cache_stats_t* p_stats)
 		{
 			//handle cache miss nmru fifo
 			NMRU_miss(cache_index,tag,offset);
-			mru_tag = tag;
+			mru_tag[cache_index] = tag;
 		}
 		rw == READ ? p_stats->read_misses++ : p_stats->write_misses++;
 	}
@@ -316,4 +346,5 @@ void cache_access(char rw, uint64_t address, cache_stats_t* p_stats)
  * @p_stats Pointer to the statistics structure
  */
 void complete_cache(cache_stats_t *p_stats) {
+printf("count is %d\n",count);
 }
